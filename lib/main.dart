@@ -1,38 +1,46 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'dart:async';
 
 void main() {
   runApp(
-    MaterialApp(debugShowCheckedModeBanner: false,home: MyWidget()),
+    MaterialApp(debugShowCheckedModeBanner: false, home: WeatherApp()),
   );
 }
 
-class MyWidget extends StatefulWidget {
-  const MyWidget({super.key});
+class WeatherApp extends StatefulWidget {
+  const WeatherApp({super.key});
 
   @override
-  State<MyWidget> createState() => _MyWidgetState();
+  State<WeatherApp> createState() => _MyWidgetState();
 }
 
-class _MyWidgetState extends State<MyWidget> {
-TextEditingController texteditingcontroller =TextEditingController();
+class _MyWidgetState extends State<WeatherApp> {
+  TextEditingController texteditingcontroller = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    SendRequestWeather();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:Text( "App for Waether"),
+        title: Text("App for Waether"),
         actions: <Widget>[
-          PopupMenuButton <String>(
-            itemBuilder: (BuildContext context){
-              return {'Setting' , 'Log out' , 'Profile','creator(Ali)'}.map((String choice){
-               return PopupMenuItem(
-                  value: choice,
-                  child:Text(choice) ,
-                  );
-                }).toList();
-            }
-            )
+          PopupMenuButton<String>(itemBuilder: (BuildContext context) {
+            return {'Setting', 'Log out', 'Profile', 'creator(Ali)'}
+                .map((String choice) {
+              return PopupMenuItem(
+                value: choice,
+                child: Text(choice),
+              );
+            }).toList();
+          })
         ],
       ),
       body: Container(
@@ -48,17 +56,17 @@ TextEditingController texteditingcontroller =TextEditingController();
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(15.0),
-                      child: ElevatedButton(onPressed: (){},
-                       child: Icon(Icons.search_outlined)),
+                      child: ElevatedButton(
+                          onPressed: () {}, child: Icon(Icons.search_outlined)),
                     ),
-                 
-                 Expanded(child: TextField(
-                  controller:texteditingcontroller ,
-                  decoration:InputDecoration(
-                    hintText: "enter a city name",
-                    border:  OutlineInputBorder(),
-                  
-                 ) ))],
+                    Expanded(
+                        child: TextField(
+                            controller: texteditingcontroller,
+                            decoration: InputDecoration(
+                              hintText: "enter a city name",
+                              border: OutlineInputBorder(),
+                            )))
+                  ],
                 ),
               ),
               Padding(
@@ -105,7 +113,8 @@ TextEditingController texteditingcontroller =TextEditingController();
                           padding: EdgeInsets.only(top: 8.0),
                           child: Text(
                             "14\u00B0",
-                            style: TextStyle(color: Colors.black54, fontSize: 14),
+                            style:
+                                TextStyle(color: Colors.black54, fontSize: 14),
                           ),
                         ),
                       ],
@@ -128,7 +137,8 @@ TextEditingController texteditingcontroller =TextEditingController();
                           padding: EdgeInsets.only(top: 8.0),
                           child: Text(
                             "12\u00B0",
-                            style: TextStyle(color: Colors.black54, fontSize: 14),
+                            style:
+                                TextStyle(color: Colors.black54, fontSize: 14),
                           ),
                         ),
                       ],
@@ -196,7 +206,6 @@ TextEditingController texteditingcontroller =TextEditingController();
                   width: double.infinity,
                   color: Colors.white,
                   height: 1,
-                  
                 ),
               ),
               Row(
@@ -206,7 +215,10 @@ TextEditingController texteditingcontroller =TextEditingController();
                     children: [
                       Text(
                         "wind speed",
-                        style: TextStyle(color: Colors.white, fontSize: 16,fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -229,7 +241,10 @@ TextEditingController texteditingcontroller =TextEditingController();
                     children: [
                       Text(
                         "sunrise",
-                        style: TextStyle(color: Colors.white,  fontSize: 16,fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -252,7 +267,10 @@ TextEditingController texteditingcontroller =TextEditingController();
                     children: [
                       Text(
                         "senset",
-                        style: TextStyle(color: Colors.white,  fontSize: 16,fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -264,7 +282,7 @@ TextEditingController texteditingcontroller =TextEditingController();
                     ],
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(right: 5.0,left: 18),
+                    padding: const EdgeInsets.only(right: 5.0, left: 18),
                     child: Container(
                       height: 25,
                       width: 1,
@@ -275,7 +293,10 @@ TextEditingController texteditingcontroller =TextEditingController();
                     children: [
                       Text(
                         "humidity",
-                        style: TextStyle(color: Colors.white,  fontSize: 16,fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -293,5 +314,16 @@ TextEditingController texteditingcontroller =TextEditingController();
         ),
       ),
     );
+  }
+
+  SendRequestWeather() async {
+    var keyapi = "d4b3b75fcd83ca6c35c3e5bbd228d10d";
+    var cityname = "tehran";
+
+    var respons = await Dio().get(
+        "https://api.openweathermap.org/data/2.5/weather",
+        queryParameters: {'q': cityname, 'appid': keyapi, 'units': 'metric'});
+    print(respons.data);
+    print(respons.statusCode);
   }
 }
