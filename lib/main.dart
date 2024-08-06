@@ -1,125 +1,297 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MaterialApp(debugShowCheckedModeBanner: false,home: MyWidget()),
+  );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class MyWidget extends StatefulWidget {
+  const MyWidget({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyWidget> createState() => _MyWidgetState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+class _MyWidgetState extends State<MyWidget> {
+TextEditingController texteditingcontroller =TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title:Text( "App for Waether"),
+        actions: <Widget>[
+          PopupMenuButton <String>(
+            itemBuilder: (BuildContext context){
+              return {'Setting' , 'Log out' , 'Profile','creator(Ali)'}.map((String choice){
+               return PopupMenuItem(
+                  value: choice,
+                  child:Text(choice) ,
+                  );
+                }).toList();
+            }
+            )
+        ],
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+      body: Container(
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                fit: BoxFit.cover, image: AssetImage('images/sky2.jpg'))),
+        child: Center(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: ElevatedButton(onPressed: (){},
+                       child: Icon(Icons.search_outlined)),
+                    ),
+                 
+                 Expanded(child: TextField(
+                  controller:texteditingcontroller ,
+                  decoration:InputDecoration(
+                    hintText: "enter a city name",
+                    border:  OutlineInputBorder(),
+                  
+                 ) ))],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 8.0),
+                child: Text(
+                  "sky",
+                  style: TextStyle(fontSize: 45, color: Colors.black54),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 8.0),
+                child: Text(
+                  "another text",
+                  style: TextStyle(fontSize: 20, color: Colors.black54),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 15.0),
+                child: Icon(
+                  Icons.wb_sunny_outlined,
+                  size: 75,
+                  color: Colors.black54,
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 18.0),
+                child: Text(
+                  "14\u00B0",
+                  style: TextStyle(color: Colors.black54, fontSize: 45),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 18.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Column(
+                      children: [
+                        Text(
+                          "max",
+                          style: TextStyle(color: Colors.black54, fontSize: 12),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            "14\u00B0",
+                            style: TextStyle(color: Colors.black54, fontSize: 14),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15.0, right: 15),
+                      child: Container(
+                        width: 1,
+                        height: 40,
+                        color: Colors.black54,
+                      ),
+                    ),
+                    const Column(
+                      children: [
+                        Text(
+                          "min",
+                          style: TextStyle(color: Colors.black54, fontSize: 12),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            "12\u00B0",
+                            style: TextStyle(color: Colors.black54, fontSize: 14),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Container(
+                  width: double.infinity,
+                  color: Colors.black54,
+                  height: 1,
+                ),
+              ),
+              Container(
+                height: 100,
+                width: double.infinity,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Center(
+                    child: ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 6,
+                        itemBuilder: (BuildContext context, int pos) {
+                          return Container(
+                            width: 70,
+                            height: 50,
+                            child: Card(
+                              elevation: 2,
+                              color: Colors.transparent,
+                              child: Column(
+                                children: [
+                                  Text("time",
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 15)),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Icon(
+                                      Icons.cloud,
+                                      color: Colors.white,
+                                      size: 20,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 8.0),
+                                    child: Text(
+                                      "14\u00B0",
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 14),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          );
+                        }),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Container(
+                  width: double.infinity,
+                  color: Colors.white,
+                  height: 1,
+                  
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    children: [
+                      Text(
+                        "wind speed",
+                        style: TextStyle(color: Colors.white, fontSize: 16,fontWeight: FontWeight.w600),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "4.73 m/s",
+                          style: TextStyle(color: Colors.white, fontSize: 15),
+                        ),
+                      )
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 18.0),
+                    child: Container(
+                      height: 25,
+                      width: 1,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Column(
+                    children: [
+                      Text(
+                        "sunrise",
+                        style: TextStyle(color: Colors.white,  fontSize: 16,fontWeight: FontWeight.w600),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "6:19 PM",
+                          style: TextStyle(color: Colors.white, fontSize: 15),
+                        ),
+                      )
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 18.0),
+                    child: Container(
+                      height: 25,
+                      width: 1,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Column(
+                    children: [
+                      Text(
+                        "senset",
+                        style: TextStyle(color: Colors.white,  fontSize: 16,fontWeight: FontWeight.w600),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "9:30 AM",
+                          style: TextStyle(color: Colors.white, fontSize: 15),
+                        ),
+                      )
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 5.0,left: 18),
+                    child: Container(
+                      height: 25,
+                      width: 1,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Column(
+                    children: [
+                      Text(
+                        "humidity",
+                        style: TextStyle(color: Colors.white,  fontSize: 16,fontWeight: FontWeight.w600),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "72%",
+                          style: TextStyle(color: Colors.white, fontSize: 15),
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
