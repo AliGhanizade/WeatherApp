@@ -14,6 +14,24 @@ class DataWeather {
   String _coountry;
   var _sunrise;
   var _sunset;
+
+  DataWeather(
+    this._cityname,
+    this._lon,
+    this._lat,
+    this._main,
+    this._desceription,
+    this._temp,
+    this._temp_min,
+    this._temp_max,
+    this._pressure,
+    this._humidity,
+    this._windspeed,
+    this._datatime,
+    this._coountry,
+    this._sunrise,
+    this._sunset,
+  );
   get cityname => this._cityname;
 
   set cityname(value) => this._cityname = value;
@@ -73,22 +91,39 @@ class DataWeather {
   get sunset => this._sunset;
 
   set sunset(value) => this._sunset = value;
-
-  DataWeather(
-    this._cityname,
-    this._lon,
-    this._lat,
-    this._main,
-    this._desceription,
-    this._temp,
-    this._temp_min,
-    this._temp_max,
-    this._pressure,
-    this._humidity,
-    this._windspeed,
-    this._datatime,
-    this._coountry,
-    this._sunrise,
-    this._sunset,
-  );
 }
+
+
+
+
+
+
+// String get cityname => _cityname;
+
+//   get lon => _lon;
+
+//   get lat => _lat;
+
+//   String get main => _main;
+
+//   String get desceription => _desceription;
+
+//   get temp => _temp;
+
+//   get temp_min => _temp_min;
+
+//   get temp_max => _temp_max;
+
+//   get pressure => _pressure;
+
+//   get humidity => _humidity;
+
+//   get windspeed => _windspeed;
+
+//   get datatime => _datatime;
+
+//   String get coountry => _country;
+
+//   get sunrise => _sunrise;
+
+//   get sunset => _sunset;
