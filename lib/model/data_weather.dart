@@ -32,65 +32,66 @@ class DataWeather {
     this._sunrise,
     this._sunset,
   );
-  get cityname => this._cityname;
 
-  set cityname(value) => this._cityname = value;
+  get cityname => _cityname;
 
-  get lon => this._lon;
+  set cityname(value) => _cityname = value;
 
-  set lon(value) => this._lon = value;
+  get lon => _lon;
 
-  get lat => this._lat;
+  set lon(value) => _lon = value;
 
-  set lat(value) => this._lat = value;
+  get lat => _lat;
 
-  get main => this._main;
+  set lat(value) => _lat = value;
 
-  set main(value) => this._main = value;
+  get main => _main;
 
-  get desceription => this._desceription;
+  set main(value) => _main = value;
 
-  set desceription(value) => this._desceription = value;
+  get desceription => _desceription;
 
-  get temp => this._temp;
+  set desceription(value) => _desceription = value;
 
-  set temp(value) => this._temp = value;
+  get temp => _temp;
 
-  get temp_min => this._temp_min;
+  set temp(value) => _temp = value;
 
-  set temp_min(value) => this._temp_min = value;
+  get temp_min => _temp_min;
 
-  get temp_max => this._temp_max;
+  set temp_min(value) => _temp_min = value;
 
-  set temp_max(value) => this._temp_max = value;
+  get temp_max => _temp_max;
 
-  get pressure => this._pressure;
+  set temp_max(value) => _temp_max = value;
 
-  set pressure(value) => this._pressure = value;
+  get pressure => _pressure;
 
-  get humidity => this._humidity;
+  set pressure(value) => _pressure = value;
 
-  set humidity(value) => this._humidity = value;
+  get humidity => _humidity;
 
-  get windspeed => this._windspeed;
+  set humidity(value) => _humidity = value;
 
-  set windspeed(value) => this._windspeed = value;
+  get windspeed => _windspeed;
 
-  get datatime => this._datatime;
+  set windspeed(value) => _windspeed = value;
 
-  set datatime(value) => this._datatime = value;
+  get datatime => _datatime;
 
-  get coountry => this._coountry;
+  set datatime(value) => _datatime = value;
 
-  set coountry(value) => this._coountry = value;
+  get coountry => _coountry;
 
-  get sunrise => this._sunrise;
+  set coountry(value) => _coountry = value;
 
-  set sunrise(value) => this._sunrise = value;
+  get sunrise => _sunrise;
 
-  get sunset => this._sunset;
+  set sunrise(value) => _sunrise = value;
 
-  set sunset(value) => this._sunset = value;
+  get sunset => _sunset;
+
+  set sunset(value) => _sunset = value;
 }
 
 

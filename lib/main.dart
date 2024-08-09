@@ -5,6 +5,7 @@ import 'package:progress_indicators/progress_indicators.dart';
 import 'dart:async';
 
 import 'package:weather_app/model/data_weather.dart';
+import 'package:intl/intl.dart';
 
 void main() {
   runApp(
@@ -20,13 +21,14 @@ class WeatherApp extends StatefulWidget {
 
 class _MyWidgetState extends State<WeatherApp> {
   TextEditingController texteditingcontroller = TextEditingController();
+  var cityname = "london";
 
   late Future<DataWeather> Dataweatherfuture;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    Dataweatherfuture = SendRequestWeather();
+    Dataweatherfuture = SendRequestWeather(cityname);
   }
 
   @override
@@ -50,6 +52,16 @@ class _MyWidgetState extends State<WeatherApp> {
         future: Dataweatherfuture,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+            DataWeather? dataWeather = snapshot.data;
+
+            final formatter = DateFormat.jm();
+            var sunrise = formatter.format(DateTime.fromMillisecondsSinceEpoch(
+                dataWeather!.sunrise * 1000,
+                isUtc: true));
+            var sunset = formatter.format(DateTime.fromMillisecondsSinceEpoch(
+                dataWeather.sunset * 1000,
+                isUtc: true));
+
             return Container(
               decoration: BoxDecoration(
                   image: DecorationImage(
@@ -73,6 +85,7 @@ class _MyWidgetState extends State<WeatherApp> {
                                   decoration: InputDecoration(
                                     hintText: "enter a city name",
                                     border: OutlineInputBorder(),
+                                    focusColor: Colors.white,
                                   )))
                         ],
                       ),
@@ -80,14 +93,14 @@ class _MyWidgetState extends State<WeatherApp> {
                     Padding(
                       padding: EdgeInsets.only(top: 8.0),
                       child: Text(
-                        "sky",
+                        dataWeather!.cityname,
                         style: TextStyle(fontSize: 45, color: Colors.black54),
                       ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 8.0),
                       child: Text(
-                        "another text",
+                        dataWeather.desceription,
                         style: TextStyle(fontSize: 20, color: Colors.black54),
                       ),
                     ),
@@ -99,10 +112,10 @@ class _MyWidgetState extends State<WeatherApp> {
                         color: Colors.black54,
                       ),
                     ),
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.only(top: 18.0),
                       child: Text(
-                        "14\u00B0",
+                        dataWeather.temp.toString() + "\u00B0",
                         style: TextStyle(color: Colors.black54, fontSize: 45),
                       ),
                     ),
@@ -111,7 +124,7 @@ class _MyWidgetState extends State<WeatherApp> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Column(
+                          Column(
                             children: [
                               Text(
                                 "max",
@@ -121,7 +134,7 @@ class _MyWidgetState extends State<WeatherApp> {
                               Padding(
                                 padding: EdgeInsets.only(top: 8.0),
                                 child: Text(
-                                  "14\u00B0",
+                                  dataWeather.temp_min.toString() + "\u00B0",
                                   style: TextStyle(
                                       color: Colors.black54, fontSize: 14),
                                 ),
@@ -134,10 +147,10 @@ class _MyWidgetState extends State<WeatherApp> {
                             child: Container(
                               width: 1,
                               height: 40,
-                              color: Colors.black54,
+                              color: Colors.white,
                             ),
                           ),
-                          const Column(
+                          Column(
                             children: [
                               Text(
                                 "min",
@@ -147,7 +160,7 @@ class _MyWidgetState extends State<WeatherApp> {
                               Padding(
                                 padding: EdgeInsets.only(top: 8.0),
                                 child: Text(
-                                  "12\u00B0",
+                                  dataWeather.temp_min.toString() + "\u00B0",
                                   style: TextStyle(
                                       color: Colors.black54, fontSize: 14),
                                 ),
@@ -158,10 +171,11 @@ class _MyWidgetState extends State<WeatherApp> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
+                      padding:
+                          const EdgeInsets.only(top: 8.0, left: 40, right: 40),
                       child: Container(
                         width: double.infinity,
-                        color: Colors.black54,
+                        color: Colors.white,
                         height: 1,
                       ),
                     ),
@@ -215,127 +229,137 @@ class _MyWidgetState extends State<WeatherApp> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
+                      padding:
+                          const EdgeInsets.only(top: 8.0, left: 40, right: 40),
                       child: Container(
                         width: double.infinity,
                         color: Colors.white,
                         height: 1,
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Column(
+                    Container(
+                      height: 60,
+                      width: double.infinity,
+                      child: Center(
+                        child: ListView(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
                           children: [
-                            Text(
-                              "wind speed",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Column(
+                                  children: [
+                                    Text(
+                                      "wind speed",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        dataWeather.windspeed.toString() +
+                                            "m/s",
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 15),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Container(
+                                    height: 25,
+                                    width: 1,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                Column(
+                                  children: [
+                                    Text(
+                                      "sunrise",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        sunrise.toString(),
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 15),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Container(
+                                    height: 25,
+                                    width: 1,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                Column(
+                                  children: [
+                                    Text(
+                                      "senset",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        sunset.toString(),
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 15),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Container(
+                                    height: 25,
+                                    width: 1,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                Column(
+                                  children: [
+                                    Text(
+                                      "humidity",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        dataWeather.humidity.toString() + "%",
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 15),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ],
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                "4.73 m/s",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 15),
-                              ),
-                            )
                           ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 18.0),
-                          child: Container(
-                            height: 25,
-                            width: 1,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              "sunrise",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                "6:19 PM",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 15),
-                              ),
-                            )
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 18.0),
-                          child: Container(
-                            height: 25,
-                            width: 1,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              "senset",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                "9:30 AM",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 15),
-                              ),
-                            )
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 5.0, left: 18),
-                          child: Container(
-                            height: 25,
-                            width: 1,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              "humidity",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                "72%",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 15),
-                              ),
-                            )
-                          ],
-                        ),
-                      ],
+                      ),
                     ),
                   ],
                 ),
               ),
             );
           } else {
-            print("snap");
-            print(snapshot);
-            print("send");
-            print(SendRequestWeather());
             return Center(
               child: JumpingDotsProgressIndicator(
                 color: Colors.black,
@@ -351,9 +375,8 @@ class _MyWidgetState extends State<WeatherApp> {
 
   //func and object
 
-  Future<DataWeather> SendRequestWeather() async {
+  Future<DataWeather> SendRequestWeather(String cityname) async {
     var keyapi = "d4b3b75fcd83ca6c35c3e5bbd228d10d";
-    var cityname = "tehran";
 
     var respons = await Dio().get(
         "https://api.openweathermap.org/data/2.5/weather",
@@ -368,8 +391,8 @@ class _MyWidgetState extends State<WeatherApp> {
         respons.data["weather"][0]["main"],
         respons.data["weather"][0]["description"],
         respons.data["main"]["temp"],
-        respons.data["main"]["min"],
-        respons.data["main"]["max"],
+        respons.data["main"]["temp_min"],
+        respons.data["main"]["temp_max"],
         respons.data["main"]["perssure"],
         respons.data["main"]["humidity"],
         respons.data["wind"]["speed"],
