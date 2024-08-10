@@ -106,11 +106,8 @@ class _MyWidgetState extends State<WeatherApp> {
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 15.0),
-                      child: Icon(
-                        Icons.wb_sunny_outlined,
-                        size: 75,
-                        color: Colors.black54,
-                      ),
+                      child: setIconFormain(dataWeather)
+                      
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 18.0),
@@ -374,6 +371,28 @@ class _MyWidgetState extends State<WeatherApp> {
   }
 
   //func and object
+ Image setIconFormain( model) {
+    String desc = model.desceription;
+    if (desc == "clear sky") {
+       return Image(image: AssetImage("images/icons8-sun-96.png"));
+     } else if (desc == "few clouds") {
+      return Image(image: AssetImage("images/icons8-partly-cloudy-day-80.png"));
+    }  else if (desc.contains("cloud")) {
+      return Image(image: AssetImage("images/icons8-clouds-80.png"));
+    } else if (desc.contains("thunderstorm")) {
+      return Image(image: AssetImage("images/icons8-storm-80.png"));
+    } else if (desc.contains("drizzle")) {
+      return Image(image: AssetImage("images/icons8-rain-cloud-80.png"));
+    } else if (desc.contains("rain")) {
+      return Image(image: AssetImage("images/icons8-heavy-rain-80.png"));
+    } else if (desc.contains("snow")) {
+      return Image(image: AssetImage("images/icons8-snow-80.png"));
+    }
+    else{
+      return Image(image: AssetImage("images/icons8-error-96.png"));
+    }
+  
+  }
 
   Future<DataWeather> SendRequestWeather(String cityname) async {
     var keyapi = "d4b3b75fcd83ca6c35c3e5bbd228d10d";
@@ -402,4 +421,6 @@ class _MyWidgetState extends State<WeatherApp> {
         respons.data["sys"]["sunset"]);
     return datamodel;
   }
+
+ 
 }
