@@ -6,6 +6,7 @@ import 'dart:async';
 
 import 'package:weather_app/model/data_weather.dart';
 import 'package:intl/intl.dart';
+import 'package:weather_app/model/week_weather.dart';
 
 void main() {
   runApp(
@@ -21,28 +22,40 @@ class WeatherApp extends StatefulWidget {
 
 class _MyWidgetState extends State<WeatherApp> {
   TextEditingController texteditingcontroller = TextEditingController();
-  var cityname = "london";
+  var cityname = "mashhad";
+  var lat;
+  var lon;
 
   late Future<DataWeather> Dataweatherfuture;
+  late StreamController<List<WeekWeather>> WeekWeatherStream;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
     Dataweatherfuture = SendRequestWeather(cityname);
+    WeekWeatherStream = StreamController<List<WeekWeather>>();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("App for Waether"),
+        
+        toolbarHeight: 40,
+        title: Text("App for Weather"),
         actions: <Widget>[
-          PopupMenuButton<String>(itemBuilder: (BuildContext context) {
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.menu),
+            itemBuilder: (BuildContext context) {
             return {'Setting', 'Log out', 'Profile', 'creator(Ali)'}
                 .map((String choice) {
               return PopupMenuItem(
+              textStyle: TextStyle(: 2),
                 value: choice,
                 child: Text(choice),
+                
               );
             }).toList();
           })
@@ -91,33 +104,30 @@ class _MyWidgetState extends State<WeatherApp> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 8.0),
+                      padding: EdgeInsets.only(top: 4.0),
                       child: Text(
                         dataWeather!.cityname,
-                        style: TextStyle(fontSize: 45, color: Colors.black54),
+                        style: TextStyle(fontSize: 35, color: Colors.black54),
                       ),
                     ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 2.0),
+                      child: Text(
+                        dataWeather.desceription,
+                        style: TextStyle(fontSize: 30, color: Colors.black54),
+                      ),
+                    ),
+                    
+                        setIconFormain(dataWeather),
                     Padding(
                       padding: EdgeInsets.only(top: 8.0),
                       child: Text(
-                        dataWeather.desceription,
-                        style: TextStyle(fontSize: 20, color: Colors.black54),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 15.0),
-                      child: setIconFormain(dataWeather)
-                      
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 18.0),
-                      child: Text(
                         dataWeather.temp.toString() + "\u00B0",
-                        style: TextStyle(color: Colors.black54, fontSize: 45),
+                        style: TextStyle(color: Colors.black54, fontSize: 40),
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 18.0),
+                      padding: const EdgeInsets.only(top: 4.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -129,9 +139,9 @@ class _MyWidgetState extends State<WeatherApp> {
                                     color: Colors.black54, fontSize: 12),
                               ),
                               Padding(
-                                padding: EdgeInsets.only(top: 8.0),
+                                padding: EdgeInsets.only(top: 4.0),
                                 child: Text(
-                                  dataWeather.temp_min.toString() + "\u00B0",
+                                  dataWeather.temp_max.toString() + "\u00B0",
                                   style: TextStyle(
                                       color: Colors.black54, fontSize: 14),
                                 ),
@@ -360,8 +370,8 @@ class _MyWidgetState extends State<WeatherApp> {
             return Center(
               child: JumpingDotsProgressIndicator(
                 color: Colors.black,
-                fontSize: 20,
-                dotSpacing: 3,
+                fontSize: 50,
+                dotSpacing: 4,
               ),
             );
           }
@@ -371,13 +381,13 @@ class _MyWidgetState extends State<WeatherApp> {
   }
 
   //func and object
- Image setIconFormain( model) {
+  Image setIconFormain(model) {
     String desc = model.desceription;
     if (desc == "clear sky") {
-       return Image(image: AssetImage("images/icons8-sun-96.png"));
-     } else if (desc == "few clouds") {
+      return Image(image: AssetImage("images/icons8-sun-96.png"));
+    } else if (desc == "few clouds") {
       return Image(image: AssetImage("images/icons8-partly-cloudy-day-80.png"));
-    }  else if (desc.contains("cloud")) {
+    } else if (desc.contains("cloud")) {
       return Image(image: AssetImage("images/icons8-clouds-80.png"));
     } else if (desc.contains("thunderstorm")) {
       return Image(image: AssetImage("images/icons8-storm-80.png"));
@@ -387,22 +397,21 @@ class _MyWidgetState extends State<WeatherApp> {
       return Image(image: AssetImage("images/icons8-heavy-rain-80.png"));
     } else if (desc.contains("snow")) {
       return Image(image: AssetImage("images/icons8-snow-80.png"));
-    }
-    else{
+    } else {
       return Image(image: AssetImage("images/icons8-error-96.png"));
     }
-  
   }
 
   Future<DataWeather> SendRequestWeather(String cityname) async {
     var keyapi = "d4b3b75fcd83ca6c35c3e5bbd228d10d";
-
     var respons = await Dio().get(
         "https://api.openweathermap.org/data/2.5/weather",
         queryParameters: {'q': cityname, 'appid': keyapi, 'units': 'metric'});
-    print(respons.data);
-    print(respons.statusCode);
 
+    lat = respons.data["coord"]["lat"];
+    lon = respons.data["coord"]["lon"];
+
+    //print(respons.data);
     var datamodel = DataWeather(
         respons.data["name"],
         respons.data["coord"]["lon"],
@@ -422,5 +431,41 @@ class _MyWidgetState extends State<WeatherApp> {
     return datamodel;
   }
 
- 
+  void sendweekweather(lat, lon) async {
+    List<WeekWeather> list = [];
+    var keyapi = "d4b3b75fcd83ca6c35c3e5bbd228d10d";
+
+    try {
+      var respons = await Dio().get(
+          "https://api.openweathermap.org/data/3.0/onecall",
+          queryParameters: {
+            'lat': lat,
+            'lon': lon,
+            'exclude': 'minutely , horly',
+            'appid': keyapi,
+            'units': 'metric'
+          });
+      final formtter = DateFormat.MMMd();
+
+      for (var i = 0; i < 8; i++) {
+        var model = respons.data['daily'][i];
+
+        var dt = formtter.format(new DateTime.fromMillisecondsSinceEpoch(
+            model['dt'] * 1000,
+            isUtc: true));
+
+        WeekWeather weekweather = WeekWeather(
+            dt,
+            model['weather'][0]['description'],
+            model['weather'][0]['main'],
+            model['temp']['day']);
+
+        list.add(weekweather);
+      }
+      WeekWeatherStream.add(list);
+    } catch (e) {
+      print(e);
+     
+    }
+  }
 }
